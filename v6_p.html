@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulador de Campo Eléctrico</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <div class="simulator-section">
+      <div class="header">
+        <h1>Simulador de Campo Eléctrico</h1>
+        <p class="subtitle">Visualización interactiva de campos eléctricos generados por cargas puntuales</p>
+      </div>
+      
+      <div class="simulator-card">
+        <div class="controls">
+          <div class="control-group">
+            <label for="chargeType">Tipo de carga</label>
+            <select id="chargeType">
+              <option value="1">Positiva (+)</option>
+              <option value="-1">Negativa (-)</option>
+            </select>
+          </div>
+          
+          <div class="control-group">
+            <label for="chargeValue">Magnitud de carga</label>
+            <input type="range" id="chargeValue" min="1" max="10" step="1" value="1">
+            <div class="value-display" id="chargeValueDisplay">1 µC</div>
+          </div>
+          
+          <div class="control-group">
+            <label>Acciones</label>
+            <div class="buttons">
+              <button id="clearBtn" class="danger">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+                Borrar todo
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="simulation-container">
+          <div class="fullscreen-btn" id="fullscreenBtn" title="Pantalla completa">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+            </svg>
+          </div>
+          <div class="simulation-area">
+            <canvas id="canvas" width="800" height="500"></canvas>
+            <div id="tooltip" class="tooltip"></div>
+          </div>
+        </div>
+        
+        <div class="instructions">
+          <div class="instruction">
+            <div class="instruction-icon" style="background-color: var(--positive); color: white;">+</div>
+            <div class="instruction-text"><strong>Clic izquierdo:</strong> Colocar carga</div>
+          </div>
+          <div class="instruction">
+            <div class="instruction-icon" style="background-color: var(--negative); color: white;">-</div>
+            <div class="instruction-text"><strong>Clic derecho:</strong> Eliminar carga</div>
+          </div>
+          <div class="instruction">
+            <div class="instruction-icon" style="background-color: var(--gray); color: white;">↔</div>
+            <div class="instruction-text"><strong>Mover ratón:</strong> Medir campo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="theory-section">
+      <div class="theory-content">
+        <div class="theory-block">
+          <h3 class="theory-title">Conceptos Básicos</h3>
+          <p class="theory-text">El campo eléctrico es un campo físico que representa la influencia que una carga eléctrica ejerce sobre el espacio que la rodea. Se define como la fuerza eléctrica por unidad de carga.</p>
+          
+          <div class="highlight">
+            <div class="highlight-title">Campo eléctrico</div>
+            <p>El campo eléctrico <strong>E</strong> en un punto del espacio se define como la fuerza eléctrica <strong>F</strong> que experimentaría una carga de prueba positiva <strong>q₀</strong> colocada en ese punto, dividida por la magnitud de la carga:</p>
+            <div class="formula">E = F/q₀</div>
+            <p>La dirección del campo eléctrico es la dirección de la fuerza que experimentaría una carga positiva.</p>
+          </div>
+        </div>
+        
+        <div class="theory-block">
+          <h3 class="theory-title">Ley de Coulomb</h3>
+          <p class="theory-text">La fuerza entre dos cargas puntuales está descrita por la Ley de Coulomb, que establece que la fuerza es directamente proporcional al producto de las cargas e inversamente proporcional al cuadrado de la distancia que las separa.</p>
+          
+          <div class="formula">F = k · (|q₁·q₂|)/r²</div>
+          
+          <div class="formula-vars">
+            <ul>
+              <li><strong>F:</strong> Fuerza eléctrica (newtons)</li>
+              <li><strong>k:</strong> Constante de Coulomb ≈ 9×10⁹ N·m²/C²</li>
+              <li><strong>q₁, q₂:</strong> Magnitudes de carga (coulombs)</li>
+              <li><strong>r:</strong> Distancia entre cargas (metros)</li>
+            </ul>
+          </div>
+          
+          <p class="theory-text">La fuerza es atractiva si las cargas tienen signos opuestos, y repulsiva si tienen el mismo signo.</p>
+        </div>
+        
+        <div class="theory-block">
+          <h3 class="theory-title">Campo de una Carga Puntual</h3>
+          <p class="theory-text">El campo eléctrico generado por una carga puntual <strong>q</strong> a una distancia <strong>r</strong> está dado por:</p>
+          
+          <div class="formula">E = k · q/r²</div>
+          
+          <div class="highlight">
+            <div class="highlight-title">Características:</div>
+            <ul style="padding-left: 1.2rem;">
+              <li>Se aleja radialmente de cargas positivas</li>
+              <li>Se dirige radialmente hacia cargas negativas</li>
+              <li>Su magnitud disminuye con el cuadrado de la distancia</li>
+              <li>Es un campo vectorial (tiene magnitud y dirección)</li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="theory-block">
+          <h3 class="theory-title">Principio de Superposición</h3>
+          <p class="theory-text">Cuando hay múltiples cargas presentes, el campo eléctrico total en un punto es la suma vectorial de los campos individuales producidos por cada carga.</p>
+          
+          <div class="formula">E<sub>total</sub> = E₁ + E₂ + E₃ + ... + E<sub>n</sub></div>
+          
+          <p class="theory-text">En esta simulación puedes observar cómo interactúan los campos de múltiples cargas, creando patrones complejos de líneas de campo.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
