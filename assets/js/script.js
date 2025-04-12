@@ -9,6 +9,10 @@ const k = 8.99e5; // Constante de Coulomb simplificada
 const fullscreenBtn = document.getElementById('fullscreenBtn');
 const simulatorCard = document.querySelector('.simulator-card');
 
+// Obtener tipo de grafico a realizar
+const plotTypeSelect = document.getElementById('plotType');
+plotTypeSelect.addEventListener('change', draw);
+
 // Ajustar tamaño del canvas
 function resizeCanvas() {
   const container = canvas.parentElement;
@@ -263,8 +267,16 @@ function drawArrow(x1, y1, x2, y2) {
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawFieldVectors();
-  drawFieldLines();
+  const selectedOption = plotTypeSelect.value;
+
+  if (selectedOption === 'vector') {
+    drawFieldVectors();
+  } else if (selectedOption === 'lines') {
+    drawFieldLines();
+  } else if (selectedOption === 'both') {
+    drawFieldVectors();
+    drawFieldLines();
+  }
   drawCharges();
 }
 
